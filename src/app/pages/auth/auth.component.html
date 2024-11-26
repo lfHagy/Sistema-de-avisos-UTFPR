@@ -21,7 +21,7 @@
 
       <mat-form-field>
         <input
-          type="number"
+          type="text"
           matInput
           placeholder="Senha"
           formControlName="password"
@@ -79,7 +79,7 @@
 
       <mat-form-field>
         <input
-          type="number"
+          type="text"
           matInput
           placeholder="Senha"
           formControlName="password"
@@ -97,9 +97,9 @@
       mat-flat-button
       type="submit"
       (click)="submit()"
-      [disabled]="!loginForm.valid"
+      [disabled]="!registerForm.valid"
     >
-      Entrar
+      Criar conta
     </button>
 
     <button class="flip-form-button" mat-button (click)="toggleLoginRegister()">

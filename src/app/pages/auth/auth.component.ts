@@ -10,6 +10,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import { RequestService } from '../request.service';
+import { IUser } from '../../core/interfaces/user';
 
 @Component({
   selector: 'app-auth',
@@ -32,7 +34,12 @@ export class AuthComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly apiService = inject(RequestService);
   private snackBar = inject(MatSnackBar);
+
+  hidePassword = true;
+  authIsLoading = false;
+  hasAccount = true;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -54,26 +61,6 @@ export class AuthComponent {
     ],
   });
 
-  hidePassword = true;
-  authIsLoading = false;
-  hasAccount = true;
-
-  get email() {
-    if (this.hasAccount) {
-      return this.loginForm.get('email');
-    } else {
-      return this.registerForm.get('email');
-    }
-  }
-
-  get password() {
-    if (this.hasAccount) {
-      return this.loginForm.get('password');
-    } else {
-      return this.registerForm.get('password');
-    }
-  }
-
   toggleLoginRegister() {
     this.hasAccount = !this.hasAccount;
   }
@@ -81,18 +68,27 @@ export class AuthComponent {
   async submit(): Promise<void> {
     this.authIsLoading = true;
     try {
-      
-    if (this.hasAccount) { // user is logging in
-      const email = this.loginForm.get('email')!.value!;
-      const password = this.loginForm.get('password')!.value!;
-      console.log(password, email);
-      //this.router.navigate(['home']);
+      if (this.hasAccount) { // user has an account
+        const user: IUser = {
+          email: this.loginForm.get('email')?.value!,
+          password: this.loginForm.get('password')?.value!,
+        };
+        const response = await this.authService.login(user);
+        if (response) {
+          this.snackBar.open(this.authService.checkResponse(response!), "Ok", { duration: 3000 });
+        } else {
+          console.log("success");
+        }
       } else { // user is registering
-
+        const user: IUser = {
+          name: this.registerForm.get('name')?.value!,
+          email: this.registerForm.get('email')?.value!,
+          password: this.registerForm.get('password')?.value!,
+        };
+        const response = await this.authService.register(user);
+        this.snackBar.open(this.authService.checkResponse(response), "Ok", { duration: 3000 });
       }
     } catch (error) {
-      const snackBarMessage = ' Credenciais inválidas. ';
-      this.snackBar.open(snackBarMessage, 'OK', { duration: 3000 });
       throw error;
     } finally {
       this.authIsLoading = false;
