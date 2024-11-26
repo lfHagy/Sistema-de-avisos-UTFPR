@@ -1,0 +1,110 @@
+<div class="auth-container">
+  <div class="auth-body">
+    @if (authIsLoading) {
+    <div class="loading-spinner">
+      <mat-spinner />
+    </div>
+    } @else if (hasAccount) {
+    <h1>Entrar</h1>
+    <div class="form-fields" [formGroup]="loginForm">
+      <mat-form-field>
+        <input
+          type="email"
+          matInput
+          placeholder="Email"
+          formControlName="email"
+        />
+        @if(!loginForm.controls.email.valid) {
+        <mat-error>Email inválido.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          type="number"
+          matInput
+          placeholder="Senha"
+          formControlName="password"
+          minlength="3"
+          maxlength="6"
+        />
+        @if(!loginForm.controls.password.valid) {
+        <mat-error>Senha inválida.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <button
+      class="submit-button"
+      mat-flat-button
+      type="submit"
+      (click)="submit()"
+      [disabled]="!loginForm.valid"
+    >
+      Entrar
+    </button>
+
+    <button class="flip-form-button" mat-button (click)="toggleLoginRegister()">
+      <mat-icon>add</mat-icon>Não tem conta?
+    </button>
+
+    } @else {
+    <h1>Criar uma conta</h1>
+    <div class="form-fields" [formGroup]="registerForm">
+      <mat-form-field>
+        <input
+          type="text"
+          matInput
+          placeholder="Nome"
+          formControlName="name"
+          minLength="3"
+          maxlength="100"
+        />
+        @if(!registerForm.controls.name.valid) {
+        <mat-error>Nome inválido.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          type="email"
+          matInput
+          placeholder="Email"
+          formControlName="email"
+        />
+        @if(!registerForm.controls.email.valid) {
+        <mat-error>Email inválido.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          type="number"
+          matInput
+          placeholder="Senha"
+          formControlName="password"
+          minlength="3"
+          maxlength="6"
+        />
+        @if(!registerForm.controls.password.valid) {
+        <mat-error>Senha inválida.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <button
+      class="submit-button"
+      mat-flat-button
+      type="submit"
+      (click)="submit()"
+      [disabled]="!loginForm.valid"
+    >
+      Entrar
+    </button>
+
+    <button class="flip-form-button" mat-button (click)="toggleLoginRegister()">
+      <mat-icon>login</mat-icon>Já tem conta?
+    </button>
+    }
+  </div>
+</div>
