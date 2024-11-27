@@ -24,9 +24,13 @@ router.post("/", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { email: usuario.email, nome: usuario.nome },
+      {
+        email: usuario.email,
+        admin: usuario.admin,
+        exp: Math.floor(Date.now() / 1000) + 15 * 60,
+      },
       secretKey,
-      { expiresIn: "1h" }
+      { algorithm: 'HS256' }
     );
 
     res.status(200).json({ token });

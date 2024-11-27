@@ -1,2 +1,34 @@
-<p>ip-selection works!</p>
-<!-- this'll be a screen that comes before the auth page, allowing the user to select where to connect -->
+<div class="ip-select-container">
+    <div class="ip-select-body">
+      <h1>Entrar</h1>
+      <div class="form-fields" [formGroup]="ipForm">
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="localhost"
+            formControlName="ip"
+          />
+        </mat-form-field>
+  
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="3000"
+            formControlName="port"
+          />
+        </mat-form-field>
+      </div>
+  
+      <button
+        class="submit-button"
+        mat-flat-button
+        type="submit"
+        (click)="submit()"
+      >
+        Entrar
+      </button>
+    </div>
+  </div>
+  

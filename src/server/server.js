@@ -5,6 +5,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const axios = require('axios');
 const app = express();
+const readline = require('readline');
+const {authenticateToken} = require('../server/middleware/token-auth.js')
 
 app.use(cors({
   origin: 'http://localhost:4200',
@@ -20,7 +22,7 @@ const logoutRoutes = require('./routes/logout');
 app.use(express.json());
 app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
-app.use('/logout', logoutRoutes);
+app.use('/logout', authenticateToken, logoutRoutes);
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     console.error('Bad JSON:', err.message);
@@ -42,12 +44,26 @@ getIp = async () => {
   }
 };
 
+const promptPort = () => {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+
+    rl.question('Digite a porta para o server: ', (port) => {
+      rl.close();
+      resolve(parseInt(port, 10) || 3000);
+    });
+  });
+};
+
 startServer = async () => {
   const serverIp = await getIp();
-  app.listen(3000, '0.0.0.0', () => {
+  const port = await promptPort();
+  app.listen(port, '0.0.0.0', () => {
     console.log(`Server rodando no ip ${serverIp}:3000`);
   });
 };
 
-// run the server
 startServer();

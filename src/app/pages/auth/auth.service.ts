@@ -1,15 +1,16 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { IUser } from '../../core/interfaces/user';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
   private readonly http = inject(HttpClient);
-  baseUrl = signal<string>('http://localhost:3000');
-  token = signal<string>('');
+  loggedUser = signal<Partial<IUser | null>>(null);
+  baseUrl = localStorage.getItem("baseUrl");
   
   async register(user: IUser) {
     console.log('Attempting to register...');
@@ -20,7 +21,7 @@ export class AuthService {
     };
     try {
       const response = await firstValueFrom(
-        this.http.post(`${this.baseUrl()}/usuarios`, payload, {
+        this.http.post(`${this.baseUrl}/usuarios`, payload, {
           observe: 'response',
         })
       );
@@ -33,21 +34,26 @@ export class AuthService {
   }
 
   async login(user: IUser) {
+    console.log(`${this.baseUrl}/login`)
     console.log('Attempting to login...');
     try {
       const payload = {
         email: user.email,
         senha: user.password as string,
       };
-      const response = await firstValueFrom(
-        this.http.post<{ token: string }>(`${this.baseUrl()}/login`, payload, {
-          observe: 'response',
-        })
-      );
-      if (response.status === 200) {
-        this.token.set(response.body!.token);
-        console.log('Token set: ', this.token());
-        return null
+      const response = await firstValueFrom(this.http.post<{ token: string }>(`${this.baseUrl}/login`, payload, { observe: 'response' }));
+        if (response.status === 200) {
+          const token = response.body?.token;
+          if (token) {
+            localStorage.setItem('authToken', token);
+            console.log('Token stored in localStorage');
+            this.loggedUser.set(payload);
+            console.log("Logged user set: ", this.loggedUser());
+          } else {
+            console.error("Logged in but no token received!");
+            return 400;
+          }
+          return null;
       } else {
         return response.status;
       }

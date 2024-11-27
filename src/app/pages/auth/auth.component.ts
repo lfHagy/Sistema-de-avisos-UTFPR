@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -10,7 +9,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
-import { RequestService } from '../request.service';
 import { IUser } from '../../core/interfaces/user';
 
 @Component({
@@ -25,7 +23,6 @@ import { IUser } from '../../core/interfaces/user';
     MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
   ],
@@ -34,12 +31,12 @@ export class AuthComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
-  private readonly apiService = inject(RequestService);
   private snackBar = inject(MatSnackBar);
 
   hidePassword = true;
   authIsLoading = false;
   hasAccount = true;
+  baseUrl = localStorage.getItem("baseUrl");
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -65,28 +62,38 @@ export class AuthComponent {
     this.hasAccount = !this.hasAccount;
   }
 
+  changeIp() {
+    this.router.navigate([""]);
+  }
+
   async submit(): Promise<void> {
     this.authIsLoading = true;
     try {
-      if (this.hasAccount) { // user has an account
+      if (this.hasAccount) {
+        // user has an account
         const user: IUser = {
           email: this.loginForm.get('email')?.value!,
           password: this.loginForm.get('password')?.value!,
         };
         const response = await this.authService.login(user);
         if (response) {
-          this.snackBar.open(this.authService.checkResponse(response!), "Ok", { duration: 3000 });
+          this.snackBar.open(this.authService.checkResponse(response!), 'Ok', {
+            duration: 3000,
+          });
         } else {
-          console.log("success");
+          this.router.navigate(['/home']);
         }
-      } else { // user is registering
+      } else {
+        // user is registering
         const user: IUser = {
           name: this.registerForm.get('name')?.value!,
           email: this.registerForm.get('email')?.value!,
           password: this.registerForm.get('password')?.value!,
         };
         const response = await this.authService.register(user);
-        this.snackBar.open(this.authService.checkResponse(response), "Ok", { duration: 3000 });
+        this.snackBar.open(this.authService.checkResponse(response), 'Ok', {
+          duration: 3000,
+        });
       }
     } catch (error) {
       throw error;
