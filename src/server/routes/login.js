@@ -1,6 +1,5 @@
 const express = require("express");
 const Usuario = require("../db/usuario");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET;
 const router = express.Router();
@@ -18,8 +17,7 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ mensagem: "Email e/ou senha invalidos" });
     }
 
-    const loginMatches = await bcrypt.compare(senha, usuario.senha);
-    if (!loginMatches) {
+    if (usuario.senha !== senha) {
       return res.status(401).json({ mensagem: "Email e/ou senha invalidos" });
     }
 

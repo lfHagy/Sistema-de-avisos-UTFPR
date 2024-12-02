@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { IpInfoService } from '../shared/ip-info.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,28 +16,21 @@ import { Router } from '@angular/router';
 export class IpSelectionComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly ipInfo = inject(IpInfoService);
+  baseUrlSignal = this.ipInfo.baseUrlSignal;
 
   ipForm = this.fb.group({
-    ip: ['http://localhost', Validators.required],
-    port: [3000, Validators.required],
+    ip: ['localhost', Validators.required],
+    port: [22222, Validators.required],
   });
 
   async submit() {
-    try {
-      let ip = this.ipForm.get('ip')?.value || '';
-      let port = this.ipForm.get('port')?.value || '';
-  
-      ip = ip.replace(/["']/g, '').trim();
-      port = port.toString().replace(/["']/g, '').trim();
-  
-      const baseUrl = `${ip}:${port}`;
-      console.log('Set ip: ', baseUrl);
-      localStorage.removeItem('baseUrl');
-      localStorage.setItem('baseUrl', baseUrl);
-      this.router.navigate(["auth"]);
-    } catch (error) {
-      console.error('Could not set ip: ', error);
-    }
+    const ip = this.ipForm.get("ip")?.value;
+    const port = this.ipForm.get("port")?.value;
+    const baseUrl = `http://${ip}:${port}`;
+    this.baseUrlSignal.set(baseUrl);
+    console.log("baseUrl set: ", this.baseUrlSignal());
+    this.router.navigate(["/auth"]);
   }
 
   ngOnInit() {

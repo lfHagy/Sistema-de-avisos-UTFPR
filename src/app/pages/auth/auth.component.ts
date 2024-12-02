@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import { IpInfoService } from '../shared/ip-info.service';
 import { IUser } from '../../core/interfaces/user';
 
 @Component({
@@ -31,17 +32,17 @@ export class AuthComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly ipInfo = inject(IpInfoService);
   private snackBar = inject(MatSnackBar);
 
   hidePassword = true;
   authIsLoading = false;
   hasAccount = true;
-  baseUrl = localStorage.getItem("baseUrl");
+  baseUrl = this.ipInfo.baseUrlSignal;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: [
-      '',
+    password: ['',
       [Validators.required, Validators.minLength(3), Validators.maxLength(6)],
     ],
   });
@@ -100,5 +101,9 @@ export class AuthComponent {
     } finally {
       this.authIsLoading = false;
     }
+  }
+
+  ngOnInit() {
+    this.ipInfo.checkIp();
   }
 }

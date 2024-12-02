@@ -3,26 +3,23 @@ require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const axios = require('axios');
+const morgan = require("morgan");
 const app = express();
 const readline = require('readline');
-const {authenticateToken} = require('../server/middleware/token-auth.js')
-
-app.use(cors({
-  origin: 'http://localhost:4200',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
-
 const usuariosRoutes = require('./routes/usuarios');
 const loginRoutes = require('./routes/login');
 const logoutRoutes = require('./routes/logout');
 
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
+app.use(morgan('combined'));
 app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
-app.use('/logout', authenticateToken, logoutRoutes);
+app.use('/logout', logoutRoutes);
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     console.error('Bad JSON:', err.message);
@@ -30,19 +27,13 @@ app.use((err, req, res, next) => {
   }
   next();
 });
+app.use((req, res, next) => {
+  logUserConnection(req);
+  next();
+});
 
 mongoose.connect("mongodb://localhost:27017/warning_db");
 const db = mongoose.connection;
-
-getIp = async () => {
-  try {
-    const response = await axios.get('https://api.ipify.org?format=json');
-    return response.data.ip;
-  } catch (err) {
-    console.error('Não foi possível determinar o IP local', err);
-    return 'localhost';
-  }
-};
 
 const promptPort = () => {
   return new Promise((resolve) => {
@@ -59,10 +50,9 @@ const promptPort = () => {
 };
 
 startServer = async () => {
-  const serverIp = await getIp();
   const port = await promptPort();
   app.listen(port, '0.0.0.0', () => {
-    console.log(`Server rodando no ip ${serverIp}:3000`);
+    console.log(`Server rodando na porta ${port}`);
   });
 };
 

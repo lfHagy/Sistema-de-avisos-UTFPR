@@ -1,5 +1,6 @@
 const express = require("express");
 const Usuario = require("../db/usuario");
+const { authenticateToken } = require("../middleware/authenticateToken");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -23,12 +24,14 @@ router.post("/", async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).json({ mensagem: "Usuário criado com sucesso", usuario: newUser });
+    res.status(201).end();
   } catch (err) {
     res.status(500).json({ mensagem: "Erro no servidor", error: err.message });
   }
 });
 
+// requests need a token from here on out
+router.use(authenticateToken);
 
 router.get("/", async (req, res) => {
   try {
@@ -41,7 +44,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:email", async (req, res) => {
   try {
-    const usuario = await Usuario.findOne({ email: req.params.email });
+    const usuario = await Usuario.findOne({ email: req.params.email }, { _id: 0, __v: 0 });
     if (!usuario) {
       return res.status(404).json({ mensagem: "Usuário não encontrado" });
     }
@@ -61,7 +64,7 @@ router.put("/:email", async (req, res) => {
   try {
     const updatedUser = await Usuario.findOneAndUpdate(
       { email: req.params.email },
-      { name: nome, password: senha },
+      { nome: nome, senha: senha },
       { new: true, runValidators: true }
     );
 
@@ -69,11 +72,15 @@ router.put("/:email", async (req, res) => {
       return res.status(404).json({ mensagem: "Usuário não encontrado" });
     }
 
-    res.json({ nome: updatedUser.name, senha: updatedUser.password });
+    res.json({
+      nome: updatedUser.nome,
+      senha: updatedUser.senha
+    });
   } catch (err) {
     res.status(500).json({ mensagem: "Erro no servidor", error: err.message });
   }
 });
+
 
 router.delete("/:email", async (req, res) => {
   try {

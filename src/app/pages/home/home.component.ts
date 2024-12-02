@@ -4,7 +4,8 @@ import { MenuService } from './menu.service';
 import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
+import { UpdateDialogComponent } from './options-dialog/options-dialog.component';
+import { IpInfoService } from '../shared/ip-info.service';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,7 @@ export class HomeComponent {
   private readonly menu = inject(MenuService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly ipInfo = inject(IpInfoService);
 
   loggedUser = this.menu.loggedUser;
 
@@ -37,6 +39,7 @@ export class HomeComponent {
 
   onLogout() {
     console.log('logged out');
+    this.menu.logout();
     localStorage.removeItem('authToken');
     this.router.navigate(['auth']);
   }
@@ -46,7 +49,13 @@ export class HomeComponent {
     this.menu.getUser(this.loggedUser()?.email!);
   }
 
+  onListUsers() {
+    console.log('listing all users');
+    this.menu.listUsers();
+  }
+
   ngOnInit() {
+    this.ipInfo.checkIp();
     if (!localStorage.getItem('authToken')) {
       this.router.navigate(['auth']);
     }

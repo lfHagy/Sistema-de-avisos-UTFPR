@@ -4,13 +4,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input'; // Import MatInputModule
 import { MenuService } from '../menu.service';
 import { IUser } from '../../../core/interfaces/user';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-update-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],  // Add MatInputModule here
-  templateUrl: './update-dialog.component.html',
-  styleUrls: ['./update-dialog.component.css']
+  imports: [ReactiveFormsModule, MatButton, MatFormFieldModule, MatInputModule],  // Add MatInputModule here
+  templateUrl: './options-dialog.component.html',
+  styleUrls: ['./options-dialog.component.css']
 })
 export class UpdateDialogComponent {
   private readonly fb = inject(FormBuilder);
