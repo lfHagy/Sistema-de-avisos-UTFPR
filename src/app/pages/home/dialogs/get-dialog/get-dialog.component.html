@@ -1,0 +1,27 @@
+<div class="dialog-body">
+  <h1>Encontrar usuário</h1>
+  <div class="dialog-form-fields" [formGroup]="getForm">
+    <mat-form-field>
+      <input matInput placeholder="Email" formControlName="email" />
+    </mat-form-field>
+    
+    <div class="button-list">
+      <button
+        mat-raised-button
+        (click)="getUser()"
+        [disabled]="getForm.invalid"
+      >
+        Retornar usuário
+      </button>
+      <button mat-raised-button (click)="getUsers()">
+        Retornar todos os usuários
+      </button>
+    </div>
+
+    @if (foundUsers.length > 0) { @for (user of foundUsers; track user.email) {
+    <div>
+      <p>{{ user.email }}</p>
+    </div>
+    } }
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="ip-select-container">
+    <div class="ip-select-body">
+      <h1>Informe o IP<br>do servidor</h1>
+      <div class="form-fields" [formGroup]="ipForm">
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="localhost"
+            formControlName="ip"
+          />
+        </mat-form-field>
+  
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="22222"
+            formControlName="port"
+          />
+        </mat-form-field>
+      </div>
+  
+      <button
+        class="submit-button"
+        mat-flat-button
+        type="submit"
+        (click)="submit()"
+      >
+        Entrar
+      </button>
+    </div>
+  </div>
+  
