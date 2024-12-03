@@ -108,6 +108,6 @@ export class AuthComponent {
 
   ngOnInit() {
     this.ipInfo.checkIp();
-    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
   }
 }

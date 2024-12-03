@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
   try {
     const existingUser = await Usuario.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ mensagem: "E-mail já cadastrado" });
+      return res.status(409).json({ mensagem: "E-mail ja cadastrado" });
     }
 
     const newUser = new Usuario({
@@ -35,7 +35,7 @@ router.use(authenticateToken);
 
 router.get("/", async (req, res) => {
   try {
-    const usuarios = await Usuario.find({}, { __v: 0 });
+    const usuarios = await Usuario.find({}, { _id: 0, __v: 0 });
     res.json(usuarios);
   } catch (err) {
     res.status(500).json({ mensagem: "Erro no servidor", error: err.message });
@@ -46,7 +46,7 @@ router.get("/:email", async (req, res) => {
   try {
     const usuario = await Usuario.findOne({ email: req.params.email }, { _id: 0, __v: 0 });
     if (!usuario) {
-      return res.status(404).json({ mensagem: "Usuário não encontrado" });
+      return res.status(404).json({ mensagem: "Usuario não encontrado" });
     }
     res.json(usuario);
   } catch (err) {
@@ -69,7 +69,7 @@ router.put("/:email", async (req, res) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ mensagem: "Usuário não encontrado" });
+      return res.status(404).json({ mensagem: "Usuario nao encontrado" });
     }
 
     res.json({
@@ -83,12 +83,16 @@ router.put("/:email", async (req, res) => {
 
 
 router.delete("/:email", async (req, res) => {
+  const email = req.params.email
   try {
-    const deletedUser = await Usuario.findOneAndDelete({
-      email: req.params.email,
-    });
+    if (email === 'admin@email.com') {
+      res.status(403).json({
+        mensagem: "Nao autorizado - nao se pode apagar a conta do admin"
+      })
+    }
+    const deletedUser = await Usuario.findOneAndDelete({email});
     if (!deletedUser) {
-      return res.status(404).json({ mensagem: "Usuário não encontrado" });
+      return res.status(404).json({ mensagem: "Usuario nao encontrado" });
     }
     res.status(200).end();
   } catch (err) {

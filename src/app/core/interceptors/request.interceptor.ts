@@ -11,20 +11,6 @@ export const requestInterceptor: HttpInterceptorFn = (req, next) => {
   const dialog = inject(MatDialog);
   const ipInfoService = inject(IpInfoService);
 
-  if (!ipInfoService.checkIp()) {
-    console.warn('No server info! Cannot connect.');
-    dialog.closeAll(); // kill dialogs if any are open
-    router.navigate(['']);
-    return EMPTY; // kill request
-  }
-
-  if (!token && router.url !== '/auth') {
-    console.warn('User is not logged in.!');
-    dialog.closeAll();
-    router.navigate(['/auth']);
-    return EMPTY;
-  }
-
   const authReq = token
     ? req.clone({
       setHeaders: {

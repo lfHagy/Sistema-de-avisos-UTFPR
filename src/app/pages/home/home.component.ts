@@ -34,8 +34,8 @@ export class HomeComponent {
       } else if (this.loggedUser()) {
         this.snackBar.open("Usuário apagado.", "Ok", { duration: 5000 });
         this.menu.deleteUser(this.loggedUser()?.email!);
+        this.router.navigate(['/auth']);
       }
-      this.router.navigate(['/auth']);
     } catch (error) {
       console.error("Ocorreu um erro!", error);
       this.router.navigate(['/auth']);
@@ -47,7 +47,7 @@ export class HomeComponent {
   }
 
   onLogout() {
-    console.log('logged out');
+    this.snackBar.open("Usuário desconectado.", "Ok", { duration: 5000 });
     this.menu.logout();
     localStorage.removeItem('authToken');
     this.router.navigate(['auth']);
@@ -55,5 +55,13 @@ export class HomeComponent {
 
   onGetUsers() {
     const dialogRef = this.dialog.open(GetDialogComponent);
+  }
+
+  ngOnInit() {
+    this.ipInfo.checkIp();
+    if (!localStorage.getItem('authToken')) {
+      console.warn("No login token! Redirecting to auth...");
+      this.router.navigate(['/auth']);
+    }
   }
 }
