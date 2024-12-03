@@ -29,6 +29,7 @@ export class IpSelectionComponent {
     const port = this.ipForm.get("port")?.value;
     const baseUrl = `http://${ip}:${port}`;
     this.baseUrlSignal.set(baseUrl);
+    localStorage.setItem("baseUrl", baseUrl);
     console.log("baseUrl set: ", this.baseUrlSignal());
     this.router.navigate(["/auth"]);
   }

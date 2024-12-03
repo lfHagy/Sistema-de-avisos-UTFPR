@@ -20,7 +20,7 @@ const authenticateToken = (req, res, next) => {
 
 const authenticateAdmin = (req, res, next) => {
     if (req.user && req.user.admin) {
-      return next(); // Proceed if the user is an admin
+      return next();
     } else {
       return res.status(403).json({ mensagem: "Acesso negado" });
     }

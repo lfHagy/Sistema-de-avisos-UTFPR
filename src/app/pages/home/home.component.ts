@@ -4,8 +4,10 @@ import { MenuService } from './menu.service';
 import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { UpdateDialogComponent } from './options-dialog/options-dialog.component';
+import { UpdateDialogComponent } from './dialogs/update-dialog/update-dialog.component';
 import { IpInfoService } from '../shared/ip-info.service';
+import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
+import { GetDialogComponent } from './dialogs/get-dialog/get-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -21,15 +23,22 @@ export class HomeComponent {
   private readonly snackBar = inject(MatSnackBar);
   private readonly ipInfo = inject(IpInfoService);
 
-  loggedUser = this.menu.loggedUser;
+  loggedUser = this.menu.loggedUser
+  isAdmin = this.menu.isAdmin;
+  selectedDialog = 0;
 
   onDeleteUser() {
-    if (this.loggedUser()?.email != 'admin@email.com') {
-      this.menu.deleteUser();
-      this.snackBar.open('Usuário apagado.', 'Ok', { duration: 5000 });
-      this.router.navigate(['auth']);
-    } else {
-      console.error("Cannot delete admin account!");
+    try {
+      if (this.isAdmin()) {
+        const dialogRef = this.dialog.open(DeleteDialogComponent);
+      } else if (this.loggedUser()) {
+        this.snackBar.open("Usuário apagado.", "Ok", { duration: 5000 });
+        this.menu.deleteUser(this.loggedUser()?.email!);
+      }
+      this.router.navigate(['/auth']);
+    } catch (error) {
+      console.error("Ocorreu um erro!", error);
+      this.router.navigate(['/auth']);
     }
   }
 
@@ -44,20 +53,7 @@ export class HomeComponent {
     this.router.navigate(['auth']);
   }
 
-  onGetUser() {
-    console.log('getting user');
-    this.menu.getUser(this.loggedUser()?.email!);
-  }
-
-  onListUsers() {
-    console.log('listing all users');
-    this.menu.listUsers();
-  }
-
-  ngOnInit() {
-    this.ipInfo.checkIp();
-    if (!localStorage.getItem('authToken')) {
-      this.router.navigate(['auth']);
-    }
+  onGetUsers() {
+    const dialogRef = this.dialog.open(GetDialogComponent);
   }
 }

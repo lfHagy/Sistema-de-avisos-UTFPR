@@ -15,6 +15,7 @@ export class MenuService {
 
   baseUrl = this.ipInfo.baseUrlSignal;
   loggedUser = this.authService.loggedUser;
+  isAdmin = this.authService.isAdmin;
 
   async logout() {
     try {
@@ -34,59 +35,47 @@ export class MenuService {
         senha: user.password,
       };
       const response = await firstValueFrom(
-        this.http.put(
-          `${this.baseUrl()}/usuarios/${user.email}`,
-          payload,
-          {
-            observe: 'response',
-          }
-        )
-      );
+        this.http.put(`${this.baseUrl()}/usuarios/${user.email}`, payload, { observe: 'response' }));
       if (response.status === 200) {
         console.log('User updated succesfully');
-      } else {
-        return response.status;
       }
+      return response;
     } catch (error) {
-      console.error(
-        'Error ocurred while trying to update user ',
-        this.loggedUser()?.email,
-        '!',
-        error
-      );
+      console.error('Error ocurred while trying to update user ', this.loggedUser()?.email, '!', error);
+      return null;
     }
-    return null;
   }
   // delete
-  async deleteUser() {
-    console.log('Attempting to delete current user...');
+  async deleteUser(email: string) {
+    console.log('Attempting to delete user...');
     try {
-      if (this.loggedUser()) {
-        const response = await firstValueFrom(
-          this.http.delete(
-            `${this.baseUrl()}/usuarios/${this.loggedUser()?.email}`,
-            { observe: 'response' }
-          )
-        );
-      }
+      const response = await firstValueFrom(this.http.delete(`${this.baseUrl()}/usuarios/${email}`, { observe: 'response' }));
+      return response;
     } catch (error) {
-      console.error(
-        'Error ocurred while trying to delete user',
-        this.loggedUser()?.email,
-        '!',
-        error
-      );
+      console.error('Error ocurred while trying to delete user', this.loggedUser()?.email, '!', error);
+      return null;
     }
   }
   // get
   async getUser(email: string) {
-    console.log('Attempting to get user...');
-    await firstValueFrom(this.http.get(
-            `${this.baseUrl()}/usuarios/${email}`));
+    try {
+      console.log('Attempting to get user...');
+      return await firstValueFrom(this.http.get(`${this.baseUrl()}/usuarios/${email}`)) as IUser;
+    } catch (error) {
+      console.error("Could not fetch users: ", error);
+      return null;
+    }
   }
 
-  async listUsers() {
+  async listUsers(): Promise<IUser[]> {
     console.log('Attempting to list all users...');
-    await firstValueFrom(this.http.get(`${this.baseUrl()}/usuarios`))
+    try {
+      const response = await firstValueFrom(this.http.get<IUser[]>(`${this.baseUrl()}/usuarios`));
+      console.log('Users fetched:', response);
+      return response;
+    } catch (error) {
+      console.error('Error fetching users: ', error);
+      return [];
+    }
   }
 }

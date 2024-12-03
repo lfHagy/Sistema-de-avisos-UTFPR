@@ -77,8 +77,8 @@ export class AuthComponent {
           password: this.loginForm.get('password')?.value!,
         };
         const response = await this.authService.login(user);
-        if (response) {
-          this.snackBar.open(this.authService.checkResponse(response!), 'Ok', {
+        if (response != 200) {
+          this.snackBar.open(`Não foi possível fazer o login: ${response}`, 'Ok', {
             duration: 3000,
           });
         } else {
@@ -92,9 +92,12 @@ export class AuthComponent {
           password: this.registerForm.get('password')?.value!,
         };
         const response = await this.authService.register(user);
-        this.snackBar.open(this.authService.checkResponse(response), 'Ok', {
-          duration: 3000,
-        });
+        if (response === 201) {
+          this.snackBar.open("Usuário cadastrado com sucesso.", "Ok", { duration: 5000 });
+          this.hasAccount = true;
+        } else {
+          this.snackBar.open("Não foi possível cadastrar o usuário.", "Ok", { duration: 5000 });
+        }
       }
     } catch (error) {
       throw error;
@@ -105,5 +108,6 @@ export class AuthComponent {
 
   ngOnInit() {
     this.ipInfo.checkIp();
+    localStorage.removeItem("token");
   }
 }

@@ -3,12 +3,13 @@ require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const morgan = require("morgan");
 const app = express();
 const readline = require('readline');
 const usuariosRoutes = require('./routes/usuarios');
 const loginRoutes = require('./routes/login');
 const logoutRoutes = require('./routes/logout');
+const jsonVerifier = require('./middleware/jsonVerifier.js');
+
 
 app.use(cors({
   origin: '*',
@@ -16,21 +17,15 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json());
-app.use(morgan('combined'));
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+  next();
+});
+// routes
 app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
 app.use('/logout', logoutRoutes);
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-    console.error('Bad JSON:', err.message);
-    return res.status(400).json({ mensagem: 'JSON inválido', error: err.message });
-  }
-  next();
-});
-app.use((req, res, next) => {
-  logUserConnection(req);
-  next();
-});
+app.use(jsonVerifier);
 
 mongoose.connect("mongodb://localhost:27017/warning_db");
 const db = mongoose.connection;
