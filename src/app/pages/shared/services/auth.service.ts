@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { IUser } from '../../core/interfaces/user';
-import { IpInfoService } from '../shared/ip-info.service';
+import { IUser } from '../../../core/interfaces/user';
+import { IpInfoService } from './ip-info.service';
 import { HttpClient } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
 

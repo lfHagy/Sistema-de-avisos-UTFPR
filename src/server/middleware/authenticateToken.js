@@ -22,7 +22,7 @@ const authenticateAdmin = (req, res, next) => {
     if (req.user && req.user.admin) {
       return next();
     } else {
-      return res.status(403).json({ mensagem: "Acesso negado" });
+      return res.status(403).json({ mensagem: "Voce nao tem permissao suficiente para performar esta acao" });
     }
   };
 

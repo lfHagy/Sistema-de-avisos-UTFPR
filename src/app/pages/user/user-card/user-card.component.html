@@ -1,0 +1,13 @@
+<div class="user-card-body">
+  <div class="card-info">
+    <h1>{{ name }}</h1>
+    <h2>{{ email }}</h2>
+  </div>
+
+  @if(email !== "admin@email.com") {
+    <div class="card-options">
+        <button mat-flat-button class="card-button" (click)="delete()">Apagar</button>
+        <button mat-flat-button class="card-button" (click)="update()">Editar</button>
+    </div>
+  }
+</div>

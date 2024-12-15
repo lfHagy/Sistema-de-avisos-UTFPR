@@ -18,7 +18,7 @@ export class IpInfoService {
         return true;
       } else { 
         console.warn("No IP! Redirecting to IP selection screen")
-        this.router.navigate([""]);
+        this.router.navigate(["ip"]);
         return false;
       }
     }

@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
       nome,
       email,
       senha,
-    });    
+    });
 
     await newUser.save();
 
@@ -46,7 +46,10 @@ router.get("/", async (req, res) => {
 
 router.get("/:email", async (req, res) => {
   try {
-    const usuario = await Usuario.findOne({ email: req.params.email }, { _id: 0, __v: 0 });
+    const usuario = await Usuario.findOne(
+      { email: req.params.email },
+      { _id: 0, __v: 0 }
+    );
     if (!usuario) {
       return res.status(404).json({ mensagem: "Usuario não encontrado" });
     }
@@ -92,10 +95,10 @@ router.delete("/:email", async (req, res) => {
       });
     } else {
       const deletedUser = await Usuario.findOneAndDelete({ email });
-    if (!deletedUser) {
-      return res.status(404).json({ mensagem: "Usuario nao encontrado" });
-    }
-    res.status(200).end();
+      if (!deletedUser) {
+        return res.status(404).json({ mensagem: "Usuario nao encontrado" });
+      }
+      res.status(200).end();
     }
   } catch (err) {
     res.status(500).json({ mensagem: "Erro no servidor", error: err.message });

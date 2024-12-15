@@ -1,0 +1,11 @@
+.toolbar-body {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    background-color: #f5ce2a;
+}
+
+.nav-button {
+    border: 20px;
+    border-radius: 0;
+}

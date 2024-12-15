@@ -1,14 +1,14 @@
-import { inject, Injectable } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
+import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { IUser } from '../../core/interfaces/user';
-import { IpInfoService } from '../shared/ip-info.service';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../shared/services/auth.service';
+import { IpInfoService } from '../shared/services/ip-info.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class MenuService {
+export class UserService {
   private readonly http = inject(HttpClient);
   private readonly ipInfo = inject(IpInfoService);
   private readonly authService = inject(AuthService);
@@ -16,17 +16,8 @@ export class MenuService {
   baseUrl = this.ipInfo.baseUrlSignal;
   loggedUser = this.authService.loggedUser;
   isAdmin = this.authService.isAdmin;
+  foundUsers = signal(<Partial<IUser[]>>[]);
 
-  async logout() {
-    try {
-      console.log('Attempting to log out...');
-      await firstValueFrom(this.http.post(`${this.baseUrl()}/logout`, null));
-      console.log('Logout successful');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  }
-  // update
   async updateUser(user: IUser) {
     console.log('Attempting to update current user...');
     try {
@@ -45,7 +36,7 @@ export class MenuService {
       return null;
     }
   }
-  // delete
+
   async deleteUser(email: string) {
     console.log('Attempting to delete user...');
     try {
@@ -56,26 +47,42 @@ export class MenuService {
       return null;
     }
   }
-  // get
-  async getUser(email: string) {
-    try {
-      console.log('Attempting to get user...');
-      return await firstValueFrom(this.http.get(`${this.baseUrl()}/usuarios/${email}`)) as IUser;
-    } catch (error) {
-      console.error("Could not fetch users: ", error);
-      return null;
-    }
-  }
 
-  async listUsers(): Promise<IUser[]> {
+  async getUser(email: string): Promise<IUser> {
+    const response = await firstValueFrom(this.http.get(`${this.baseUrl()}/usuarios/${email}`));
+    const user = {
+      ...response,
+      name: (response as any).nome,
+      password: (response as any).senha
+    };
+    return user as IUser;
+  }  
+
+  async listUsers() {
     console.log('Attempting to list all users...');
     try {
-      const response = await firstValueFrom(this.http.get<IUser[]>(`${this.baseUrl()}/usuarios`));
-      console.log('Users fetched:', response);
-      return response;
+      const response = await firstValueFrom(this.http.get(`${this.baseUrl()}/usuarios`)) as any[];
+      const users: IUser[] = response.map((user) => ({
+        name: user.nome,
+        email: user.email,
+        password: user.password,
+        admin: user.admin,
+      }));
+      console.log('Users fetched:', users);
+      this.foundUsers.set(users);
     } catch (error) {
       console.error('Error fetching users: ', error);
-      return [];
+    }
+  }
+  
+
+  async logout() {
+    try {
+      console.log('Attempting to log out...');
+      await firstValueFrom(this.http.post(`${this.baseUrl()}/logout`, null));
+      console.log('Logout successful');
+    } catch (error) {
+      console.error('Logout failed:', error);
     }
   }
 }
