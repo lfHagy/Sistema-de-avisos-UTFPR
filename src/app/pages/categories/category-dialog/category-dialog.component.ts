@@ -11,18 +11,24 @@ import { MatInput } from '@angular/material/input';
   standalone: true,
   imports: [MatButton, MatInput, MatFormField, ReactiveFormsModule],
   templateUrl: './category-dialog.component.html',
-  styleUrl: './category-dialog.component.css'
+  styleUrls: ['./category-dialog.component.css', '../../shared/dialog.css'],
 })
 export class CategoryDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { id: number, mode: string }) { }
 
   private readonly categoryService = inject(CategoriesService);
+  selectedCategory = this.categoryService.selectedCategory;
   categoryName = new FormControl('', [Validators.required]);
 
   async submit() {
     try {
       if (this.data.mode === 'post') {
         await this.categoryService.addCategory(this.categoryName.value!);
+      } else if (this.data.mode === 'put') {
+        const payload = {
+          nome: this.categoryName.value
+        }
+        await this.categoryService.updateCategory(this.selectedCategory()!.id, payload);
       }
     } catch (error) {
       console.error("Could not submit: ", error);

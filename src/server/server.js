@@ -19,7 +19,14 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+  const startTime = new Date().toISOString();
+  console.log(`${startTime}: Received - ${req.method} ${req.originalUrl}`);
+  
+  res.on('finish', () => {
+    const status = res.statusCode;
+    console.log(`${startTime}: Responded - ${req.method} ${req.originalUrl} - with status ${status}`);
+  });
+
   next();
 });
 // routes

@@ -31,17 +31,15 @@ export class CategoriesComponent {
     const dialogRef = this.dialog.open(CategoryDialogComponent, {data: { mode: 'put'}});
   }
 
-  deleteCategory() {
-    this.categoryService.deleteCategory(this.selectedCategory()?.id!);
+  async deleteCategory() {
+    await this.categoryService.deleteCategory(this.selectedCategory()?.id!);
   }
 
-  refreshCategories() {
-    this.categoryService.findCategories();
+  async refreshCategories() {
+    await this.categoryService.findCategories();
   }
 
-  selectCategory(id: number) {
-    const category = this.foundCategories().find(category => category.id === id);
-    this.selectedCategory.set(category || null);
+  async selectCategory(id: number) {
+    await this.categoryService.refreshSelectedCategory(id);
   }
-  
 }

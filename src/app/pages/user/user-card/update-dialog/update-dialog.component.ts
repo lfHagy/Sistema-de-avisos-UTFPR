@@ -13,7 +13,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   standalone: true,
   imports: [ReactiveFormsModule, MatButton, MatFormFieldModule, MatInputModule],
   templateUrl: './update-dialog.component.html',
-  styleUrls: ['./update-dialog.css']
+  styleUrls: ['./update-dialog.css', '../../../shared/dialog.css']
 })
 export class UpdateDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: {email: string}) { }

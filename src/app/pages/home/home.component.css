@@ -1,0 +1,13 @@
+.home-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 20%;
+}
+
+.welcome-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+}

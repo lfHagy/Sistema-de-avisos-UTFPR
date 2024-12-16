@@ -29,20 +29,34 @@ export class CategoriesService {
     const response = await firstValueFrom(
       this.http.get<{ nome: string; id: number }[]>(`${this.baseUrl()}/categorias`)
     );
-  
+
     const transformedCategories = response.map(category => ({
       id: category.id,
       name: category.nome,
     }));
-  
+    console.log(transformedCategories);
+
     this.foundCategories.set(transformedCategories as ICategory[]);
   }
 
-  async updateCategory() {
-    console.log('todo');
+  async updateCategory(id: number, payload: object) {
+    await firstValueFrom(this.http.put(`${this.baseUrl()}/categorias/${id}`, payload));
+    await this.findCategories();
   }
 
   async deleteCategory(id: number) {
-    console.log('todo');
+    await firstValueFrom(this.http.delete(`${this.baseUrl()}/categorias/${id}`));
+    await this.findCategories();
+    this.selectedCategory.set(null);
+  }
+
+  async refreshSelectedCategory(id: number) {
+    const selectedCategory = this.foundCategories().find(category => category.id === id);
+
+    if (selectedCategory) {
+      this.selectedCategory.set(selectedCategory);
+    } else {
+      console.warn(`Category with ID ${id} not found.`);
+    }
   }
 }

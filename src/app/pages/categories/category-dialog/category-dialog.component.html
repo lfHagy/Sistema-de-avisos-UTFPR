@@ -11,7 +11,21 @@
       />
     </mat-form-field>
 
-    <button mat-raised-button (click)="submit()">Submit</button>
+    <button mat-raised-button (click)="submit()">Criar</button>
   </div>
-  } @else { todo }
+  } @else {
+  <h1>Atualizar categoria</h1>
+  <div class="dialog-form-fields">
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Nome"
+        [formControl]="categoryName"
+        type="text"
+      />
+    </mat-form-field>
+
+    <button mat-raised-button (click)="submit()">Atualizar</button>
+  </div>
+  }
 </div>

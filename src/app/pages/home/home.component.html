@@ -1,1 +1,10 @@
 <app-toolbar />
+<div class="home-body">
+  <div class="welcome-box">
+    <h1>Bem-vindo!</h1>
+    <h2>Selecione uma das opções acima para utilizar o sistema.</h2>
+    @if (isAdmin()) {
+    <h2>Você tem permissões de administrador.</h2>
+    }
+  </div>
+</div>
