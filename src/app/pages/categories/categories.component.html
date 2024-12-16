@@ -1,6 +1,30 @@
 <app-toolbar />
-<div class="categories-sidebar">
-  <div class="add-button-container">
-    <button mat-stroked-button class="add-button" (click)="addCategory()">Adicionar Categoria</button>
+<div class="categories-body">
+  <div class="categories-sidebar">
+    @if (isAdmin()) {
+    <div class="button-container">
+      <button mat-stroked-button class="button" (click)="addCategory()">
+        Adicionar Categoria
+      </button>
+      <button mat-stroked-button class="button" (click)="refreshCategories()">
+        Refresh
+      </button>
+    </div>
+    }
+
+    <div class="category-list">
+      @for (category of foundCategories(); track category.id) {
+      <button
+        mat-stroked-button
+        class="button"
+        (click)="selectCategory(category.id)"
+      >
+        {{ category.name }}
+      </button>
+      }
+    </div>
   </div>
+  @if (selectedCategory()) {
+  <div class="categories-content"></div>
+  }
 </div>

@@ -16,7 +16,7 @@ export class UserCardComponent {
 
   private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
-  private readonly dialog = inject(MatDialog);
+  private dialog = inject(MatDialog);
 
   @Input() name: string = 'Sem nome';
   @Input() email: string = 'Sem email';

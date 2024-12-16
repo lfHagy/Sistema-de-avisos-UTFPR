@@ -3,6 +3,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { UserService } from '../../user/user.service';
+import { CategoriesService } from '../../categories/categories.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -14,13 +15,15 @@ import { UserService } from '../../user/user.service';
 export class ToolbarComponent {
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
+  private readonly categoryService = inject(CategoriesService);
 
   goToUserPage() {
     this.router.navigate(["/user"]);
   }
 
-  goToCategories() {
-    this.router.navigate(["/categories"]);
+  async goToCategories() {
+    await  this.categoryService.findCategories();
+    this.router.navigate(["/categories"]); // jerry rigged, but if I try to do this where it should be the program breaks
   }
 
   logout() {
