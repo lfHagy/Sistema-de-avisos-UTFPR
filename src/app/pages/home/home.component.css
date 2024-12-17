@@ -1,21 +1,13 @@
-.home-container {
+.home-body {
     display: flex;
-    flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 100%;
-    height: 100%;
+    height: 20%;
 }
 
-.menu-buttons {
-    display: flex;
-    flex-flow: column nowrap;
-    background-color: burlywood;
+.welcome-box {
+    background-color: white;
     padding: 20px;
     border-radius: 20px;
-
-    button {
-        margin: 10px 0;
-    }
 }

@@ -1,0 +1,30 @@
+<div class="dialog-body">
+  @if (data.mode === 'post') {
+  <h1>Criar categoria</h1>
+  <div class="dialog-form-fields">
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Nome"
+        [formControl]="categoryName"
+        type="text"
+      />
+    </mat-form-field>
+
+    <button mat-raised-button (click)="submit()" [mat-dialog-close]="true">Criar</button>
+  </div>
+  } @else {
+  <h1>Atualizar categoria</h1>
+  <div class="dialog-form-fields">
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Nome"
+        [formControl]="categoryName"
+        type="text"
+      />
+    </mat-form-field>
+    <button mat-raised-button (click)="submit()" [mat-dialog-close]="true">Atualizar</button>
+  </div>
+  }
+</div>

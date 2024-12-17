@@ -7,7 +7,9 @@ router.post("/", async (req, res) => {
   const { nome, email, senha } = req.body;
 
   if (!nome || !email || !senha) {
-    return res.status(400).json({ mensagem: "Todos os campos são obrigatórios" });
+    return res
+      .status(400)
+      .json({ mensagem: "Todos os campos são obrigatórios" });
   }
 
   try {
@@ -20,7 +22,7 @@ router.post("/", async (req, res) => {
       nome,
       email,
       senha,
-    });    
+    });
 
     await newUser.save();
 
@@ -44,7 +46,10 @@ router.get("/", async (req, res) => {
 
 router.get("/:email", async (req, res) => {
   try {
-    const usuario = await Usuario.findOne({ email: req.params.email }, { _id: 0, __v: 0 });
+    const usuario = await Usuario.findOne(
+      { email: req.params.email },
+      { _id: 0, __v: 0 }
+    );
     if (!usuario) {
       return res.status(404).json({ mensagem: "Usuario não encontrado" });
     }
@@ -74,27 +79,27 @@ router.put("/:email", async (req, res) => {
 
     res.json({
       nome: updatedUser.nome,
-      senha: updatedUser.senha
+      senha: updatedUser.senha,
     });
   } catch (err) {
     res.status(500).json({ mensagem: "Erro no servidor", error: err.message });
   }
 });
 
-
 router.delete("/:email", async (req, res) => {
-  const email = req.params.email
+  const email = req.params.email;
   try {
-    if (email === 'admin@email.com') {
+    if (email === "admin@email.com") {
       res.status(403).json({
-        mensagem: "Nao autorizado - nao se pode apagar a conta do admin"
-      })
+        mensagem: "Nao autorizado - nao se pode apagar a conta do admin",
+      });
+    } else {
+      const deletedUser = await Usuario.findOneAndDelete({ email });
+      if (!deletedUser) {
+        return res.status(404).json({ mensagem: "Usuario nao encontrado" });
+      }
+      res.status(200).end();
     }
-    const deletedUser = await Usuario.findOneAndDelete({email});
-    if (!deletedUser) {
-      return res.status(404).json({ mensagem: "Usuario nao encontrado" });
-    }
-    res.status(200).end();
   } catch (err) {
     res.status(500).json({ mensagem: "Erro no servidor", error: err.message });
   }

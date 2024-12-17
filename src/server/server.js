@@ -8,6 +8,7 @@ const readline = require('readline');
 const usuariosRoutes = require('./routes/usuarios');
 const loginRoutes = require('./routes/login');
 const logoutRoutes = require('./routes/logout');
+const categoriasRoutes = require('./routes/categorias.js');
 const jsonVerifier = require('./middleware/jsonVerifier.js');
 
 
@@ -18,13 +19,20 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+  const startTime = new Date().toISOString();
+  console.log(`${startTime}: Received - ${req.method} ${req.originalUrl}`);
+  
+  res.on('finish', () => {
+    console.log(`${startTime}: Responded - ${req.method} ${req.originalUrl}`);
+  });
+
   next();
 });
 // routes
 app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
 app.use('/logout', logoutRoutes);
+app.use('/categorias', categoriasRoutes);
 app.use(jsonVerifier);
 
 mongoose.connect("mongodb://localhost:27017/warning_db");

@@ -1,0 +1,16 @@
+<app-toolbar />
+<div class="user-body">
+    <div class="user-card-container">
+        <app-user-card [name]="loggedUser()?.name!" [email]="loggedUser()?.email!"/>
+    </div>
+
+    @if (isAdmin()) {
+        @for (user of foundUsers(); track user) {
+            @if (user!.email!== "admin@email.com") {
+                <div class="user-card-container">
+                    <app-user-card [name]="user!.name!" [email]="user!.email"/>
+                </div>
+            }   
+        } 
+    }
+</div>

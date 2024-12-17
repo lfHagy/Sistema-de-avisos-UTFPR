@@ -30,8 +30,6 @@ router.post("/", async (req, res) => {
       secretKey,
       { algorithm: 'HS256' }
     );
-    console.log(admin, email);
-    console.log(usuario);
     res.status(200).json({ token });
   } catch (err) {
     console.error("Error during login:", err);

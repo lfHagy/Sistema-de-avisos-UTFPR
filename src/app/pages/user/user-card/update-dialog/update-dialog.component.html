@@ -2,20 +2,16 @@
   <h1>Atualizar conta</h1>
   <div class="dialog-form-fields" [formGroup]="updateForm">
     <mat-form-field>
-      <input matInput placeholder="Email" formControlName="email" />
-    </mat-form-field>
-
-    <mat-form-field>
       <input
         matInput
-        placeholder="Password"
+        placeholder="Senha"
         formControlName="password"
         type="password"
       />
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="Name" formControlName="name" />
+      <input matInput placeholder="Nome" formControlName="name" />
     </mat-form-field>
 
     <button mat-raised-button (click)="submit()">Submit</button>

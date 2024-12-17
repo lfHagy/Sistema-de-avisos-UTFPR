@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { IpInfoService } from '../shared/ip-info.service';
+import { IpInfoService } from '../shared/services/ip-info.service';
 import { Router } from '@angular/router';
 
 @Component({

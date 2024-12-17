@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
-import { IpInfoService } from '../shared/ip-info.service';
+import { AuthService } from '../shared/services/auth.service';
+import { IpInfoService } from '../shared/services/ip-info.service';
 import { IUser } from '../../core/interfaces/user';
 
 @Component({
@@ -48,15 +48,9 @@ export class AuthComponent {
   });
 
   registerForm = this.fb.group({
-    name: [
-      '',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
-    ],
+    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)], ],
     email: ['', [Validators.required, Validators.email]],
-    password: [
-      '',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(6)],
-    ],
+    password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(6)], ],
   });
 
   toggleLoginRegister() {
@@ -64,7 +58,7 @@ export class AuthComponent {
   }
 
   changeIp() {
-    this.router.navigate([""]);
+    this.router.navigate(["ip"]);
   }
 
   async submit(): Promise<void> {
@@ -82,7 +76,8 @@ export class AuthComponent {
             duration: 3000,
           });
         } else {
-          this.router.navigate(['/home']);
+          localStorage.setItem('email', user.email);
+          this.router.navigate(['']);
         }
       } else {
         // user is registering
