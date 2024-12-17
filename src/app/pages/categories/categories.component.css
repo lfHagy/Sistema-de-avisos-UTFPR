@@ -22,6 +22,29 @@
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
+    text-overflow: ellipsis;
+}
+
+.categories-content {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    background-color: whitesmoke;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+.category-buttons {
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    width: 300px;
+
+    button {
+        border: 10px;
+    }
 }
 
 .button {

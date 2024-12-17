@@ -23,6 +23,7 @@ export class CategoriesService {
     const response = await firstValueFrom(
       this.http.post(`${this.baseUrl()}/categorias`, payload)
     );
+    await this.findCategories();
   }
 
   async findCategories() {
@@ -42,6 +43,7 @@ export class CategoriesService {
   async updateCategory(id: number, payload: object) {
     await firstValueFrom(this.http.put(`${this.baseUrl()}/categorias/${id}`, payload));
     await this.findCategories();
+    await this.refreshSelectedCategory(this.selectedCategory()!.id);
   }
 
   async deleteCategory(id: number) {

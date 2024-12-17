@@ -23,8 +23,7 @@ app.use((req, res, next) => {
   console.log(`${startTime}: Received - ${req.method} ${req.originalUrl}`);
   
   res.on('finish', () => {
-    const status = res.statusCode;
-    console.log(`${startTime}: Responded - ${req.method} ${req.originalUrl} - with status ${status}`);
+    console.log(`${startTime}: Responded - ${req.method} ${req.originalUrl}`);
   });
 
   next();

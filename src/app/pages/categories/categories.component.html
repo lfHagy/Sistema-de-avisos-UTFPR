@@ -3,9 +3,11 @@
   <div class="categories-body">
     <div class="categories-sidebar">
       <div class="button-container">
+        @if (isAdmin()) {
         <button mat-stroked-button class="button" (click)="addCategory()">
           Adicionar Categoria
         </button>
+        }
         <button mat-stroked-button class="button" (click)="refreshCategories()">
           Refresh
         </button>
@@ -25,9 +27,17 @@
     </div>
     @if (selectedCategory()) {
     <div class="categories-content">
-      <h1>{{ selectedCategory()?.name }}</h1>
-      <button mat-stroked-button (click)="editCategory()">Editar</button>
-      <button mat-stroked-button (click)="deleteCategory()">Apagar</button>
+      <div class="categories-content-body">
+        <div>
+          <h1>{{ selectedCategory()?.name }}</h1>
+        </div>
+        @if (isAdmin()) {
+        <div class="category-buttons">
+          <button mat-stroked-button (click)="editCategory()">Editar</button>
+          <button mat-stroked-button (click)="deleteCategory()">Apagar</button>
+        </div>
+        }
+      </div>
     </div>
     }
   </div>

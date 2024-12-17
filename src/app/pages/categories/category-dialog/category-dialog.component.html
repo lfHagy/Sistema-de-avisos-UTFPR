@@ -11,7 +11,7 @@
       />
     </mat-form-field>
 
-    <button mat-raised-button (click)="submit()">Criar</button>
+    <button mat-raised-button (click)="submit()" [mat-dialog-close]="true">Criar</button>
   </div>
   } @else {
   <h1>Atualizar categoria</h1>
@@ -24,8 +24,7 @@
         type="text"
       />
     </mat-form-field>
-
-    <button mat-raised-button (click)="submit()">Atualizar</button>
+    <button mat-raised-button (click)="submit()" [mat-dialog-close]="true">Atualizar</button>
   </div>
   }
 </div>
