@@ -11,20 +11,22 @@ Projeto criado em Angular para a disciplina de Tecnologias Cliente-Servidor da t
 
 -Validação de "nível" de usuário via token (seja ele comum ou admin);
 
--Receber e responder requests de criação de usuário;
+-Receber e responder requests de criação de usuário e categorias;
 
--visualização de usuário por email;
+-Visualização de usuário por email;
 
--listagem de usuários;
+-Visualização de categorias por id;
 
--atualização de usuários;
+-Listagem de usuários e categorias;
 
--deleção de usuários;
+-Atualização de usuários e categorias;
 
--login e logout.
+-Deleção de usuários e categorias;
+
+-Login e logout.
 
 ### Funcionalidades do cliente
--Telas de seleção de IP, login e um menu de testes provisório;
+-Telas de seleção de IP, login e uma interface simples para realização das operações e visualização dos dados;
 
 -No momento, o usuário pode enviar todos os requests os quais o servidor pode responder.
 
