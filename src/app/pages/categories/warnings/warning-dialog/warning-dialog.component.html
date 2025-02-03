@@ -1,0 +1,23 @@
+<div class="dialog-body">
+  <h1>@if(data.mode == "post") {Criar aviso} @else {Atualizar aviso}</h1>
+  <div class="dialog-form-fields">
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Aviso"
+        [formControl]="warningText"
+        type="textarea"
+      />
+      <mat-hint>{{ warningText.value!.length }}/500</mat-hint>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      (click)="submit()"
+      [mat-dialog-close]="true"
+      [disabled]="!warningText.valid"
+    >
+      Criar
+    </button>
+  </div>
+</div>

@@ -9,6 +9,7 @@ const usuariosRoutes = require('./routes/usuarios');
 const loginRoutes = require('./routes/login');
 const logoutRoutes = require('./routes/logout');
 const categoriasRoutes = require('./routes/categorias.js');
+const avisosRoutes = require('./routes/avisos.js');
 const jsonVerifier = require('./middleware/jsonVerifier.js');
 
 
@@ -28,11 +29,12 @@ app.use((req, res, next) => {
 
   next();
 });
-// routes
+
 app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
 app.use('/logout', logoutRoutes);
 app.use('/categorias', categoriasRoutes);
+app.use('/avisos', avisosRoutes);
 app.use(jsonVerifier);
 
 mongoose.connect("mongodb://localhost:27017/warning_db");

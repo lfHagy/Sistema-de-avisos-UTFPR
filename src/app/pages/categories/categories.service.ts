@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { ICategory } from '../../core/interfaces/category';
+import { WarningService } from './warnings/warning.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,11 @@ export class CategoriesService {
 
   private readonly http = inject(HttpClient);
   private readonly authService = inject(AuthService);
+  private readonly warningService = inject(WarningService);
 
   baseUrl = this.authService.baseUrl;
   foundCategories = signal<ICategory[]>([]);
+  foundWarnings = this.warningService.foundWarnings;
   selectedCategory = signal<ICategory | null>(null);
 
   async addCategory(name: string) {
@@ -57,6 +60,7 @@ export class CategoriesService {
 
     if (selectedCategory) {
       this.selectedCategory.set(selectedCategory);
+      await this.warningService.getWarnings(selectedCategory.id);
     } else {
       console.warn(`Category with ID ${id} not found.`);
     }
