@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.JWT_SECRET;
 const router = express.Router();
 
+const activeUsers = [];
+
 router.post("/", async (req, res) => {
   try {
     const { email, senha } = req.body;
@@ -13,23 +15,18 @@ router.post("/", async (req, res) => {
     }
 
     const usuario = await Usuario.findOne({ email });
-    if (!usuario) {
+    if (!usuario || usuario.senha !== senha) {
       return res.status(401).json({ mensagem: "Email e/ou senha invalidos" });
     }
 
-    if (usuario.senha !== senha) {
-      return res.status(401).json({ mensagem: "Email e/ou senha invalidos" });
-    }
-      const {admin, email: teste} = usuario
     const token = jwt.sign(
-      {
-        email: usuario.email,
-        admin: usuario.admin,
-        exp: Math.floor(Date.now() / 1000) + 15 * 60,
-      },
+      { email: usuario.email, admin: usuario.admin, exp: Math.floor(Date.now() / 1000) + 15 * 60 },
       secretKey,
       { algorithm: 'HS256' }
     );
+
+    activeUsers.push({ email: usuario.email, token });
+
     res.status(200).json({ token });
   } catch (err) {
     console.error("Error during login:", err);
@@ -37,4 +34,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = {
+  router, 
+  activeUsers
+};

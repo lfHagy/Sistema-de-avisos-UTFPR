@@ -10,7 +10,7 @@ const validateDescricao = (descricao) => descricao && descricao.length >= 1 && d
 router.post('/', authenticateToken, authenticateAdmin, async (req, res) => {
   const { idCategoria, descricao } = req.body;
 
-  if (!validateDescricao(descricao) || !Number.isInteger(idCategoria)) {
+  if (!validateDescricao(descricao)) {
     return res.status(400).json({ mensagem: 'Dados invalidos' });
   }
 
