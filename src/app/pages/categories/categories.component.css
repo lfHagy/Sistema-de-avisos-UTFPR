@@ -29,7 +29,7 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    background-color: whitesmoke;
+    background-color: white;
     width: 100%;
     height: 100%;
     padding: 10px;
@@ -40,11 +40,23 @@
     background-color: white;
     border-radius: 20px;
     padding: 20px;
+    border: 10px;
     width: 300px;
 
     button {
         border: 10px;
     }
+}
+
+.warnings {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+}
+
+.warning-card {
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .button {

@@ -35,7 +35,32 @@
         <div class="category-buttons">
           <button mat-stroked-button (click)="editCategory()">Editar</button>
           <button mat-stroked-button (click)="deleteCategory()">Apagar</button>
+          <button mat-stroked-button (click)="addWarning()">Novo aviso</button>
         </div>
+        }
+      </div>
+
+      <div class="warnings">
+        @for (warning of foundWarnings(); track warning.id) {
+        <div class="warning-card">
+          <mat-divider />
+          <br />
+          <p>{{ warning.descricao }}</p>
+          @if (isAdmin()) {
+          <div class="warning-buttons">
+            <button mat-stroked-button (click)="updateWarning(warning.id)">
+              Editar
+            </button>
+            <button
+              mat-stroked-button
+              (click)="deleteWarning(warning.id, this.selectedCategory()!.id)"
+            >
+              Apagar
+            </button>
+          </div>
+          }
+        </div>
+
         }
       </div>
     </div>

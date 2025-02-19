@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./category-dialog.component.css', '../../shared/dialog.css'],
 })
 export class CategoryDialogComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { id: number, mode: string }) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {mode: string }) { }
 
   private readonly categoryService = inject(CategoriesService);
   private readonly snackBar = inject(MatSnackBar);
